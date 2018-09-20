@@ -66,21 +66,23 @@ function gateKeeper(req, res, next) {
   
   //  2. parses values sent for `user` and `pass` from 'x-username-and-password'
   const {user, pass} = queryString.parse(reqAuthString);
-    
+      
   //  3. looks for a user object matching the sent username and password values
-  
-  
+  const userObj = verifyUser(user, pass, USERS);
+    
   //  4. if matching user found, add the user object to the request object
   //     (aka, `req.user = matchedUser`)   
+  req.user = userObj;
   
-    
-  
-  // your code should replace the line below
   next();
 }
 
-
-
+  function verifyUser(userName, password,  USERS) {
+    // Returns the requested user object, or undefined
+    return USERS.find(user => {
+      return ((user.userName === userName) && (user.password === password));
+    });
+  }
 
 // Add the middleware to your app!
 app.use(gateKeeper);
